@@ -1,68 +1,56 @@
 package com.tumo.finalproject.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
-/**
- * A movie one user has saved to their favorites — one row in the {@code favorites}
- * table.
- *
- * <p>Why not just store a {@link Movie}? Because a favorite needs two extra things
- * a Movie does not have: a database primary key, and the {@code username} of the
- * person who saved it. {@code FavoriteMovie} is the database shape;
- * {@link Movie} is the shape the browser sees. {@code FavoritesService} converts
- * between them.
- *
- * <h2>TODO 1 — declare the remaining fields (all private)</h2>
- * <pre>
- *   String username     who saved this movie
- *   int    tmdbId       the movie's TMDB id (not our primary key!)
- *   String title
- *   String overview
- *   double voteAverage
- *   String releaseDate
- *   String posterPath
- * </pre>
- *
- * <h2>TODO 2 — annotate the fields</h2>
- * Import {@code jakarta.persistence.Column} and add:
- * <pre>
- *   &#64;Column(nullable = false)     above username and above tmdbId
- *   &#64;Column(length = 2000)        above overview
- * </pre>
- * A plot summary easily exceeds the 255-character default, so without
- * {@code length = 2000} saving a long overview fails at runtime.
- *
- * <h2>TODO 3 — stop the same movie being favorited twice</h2>
- * Import {@code jakarta.persistence.UniqueConstraint} and extend the
- * {@code @Table} annotation below so the <i>pair</i> (username, tmdbId) must be
- * unique:
- * <pre>
- *   &#64;Table(name = "favorites",
- *          uniqueConstraints = &#64;UniqueConstraint(columnNames = {"username", "tmdbId"}))
- * </pre>
- * Two different users may both favorite the same movie; one user may not favorite
- * it twice. Add this only after TODO 1, or Hibernate will fail at startup naming
- * a column that does not exist yet.
- *
- * <h2>TODO 4 — add two constructors</h2>
- * <ul>
- *   <li>A no-argument constructor (required by JPA).</li>
- *   <li>A constructor taking all seven fields, in the order listed above.</li>
- * </ul>
- *
- * <h2>TODO 5 — add getters and setters for every field, including {@code id}</h2>
- */
 @Entity
-@Table(name = "favorites")
+@Table(name = "favorites", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "tmdbId"}))
 public class FavoriteMovie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // TODO: remaining fields, constructors, getters and setters go here.
+    private String username;
+    private int tmdbId;
+    private String title;
+    private String overview;
+    private double voteAverage;
+    private String releaseDate;
+    private String posterPath;
+
+    public FavoriteMovie() {}
+
+    public FavoriteMovie(String username, int tmdbId, String title, String overview, double voteAverage, String releaseDate, String posterPath) {
+        this.username = username;
+        this.tmdbId = tmdbId;
+        this.title = title;
+        this.overview = overview;
+        this.voteAverage = voteAverage;
+        this.releaseDate = releaseDate;
+        this.posterPath = posterPath;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public int getTmdbId() { return tmdbId; }
+    public void setTmdbId(int tmdbId) { this.tmdbId = tmdbId; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public String getOverview() { return overview; }
+    public void setOverview(String overview) { this.overview = overview; }
+
+    public double getVoteAverage() { return voteAverage; }
+    public void setVoteAverage(double voteAverage) { this.voteAverage = voteAverage; }
+
+    public String getReleaseDate() { return releaseDate; }
+    public void setReleaseDate(String releaseDate) { this.releaseDate = releaseDate; }
+
+    public String getPosterPath() { return posterPath; }
+    public void setPosterPath(String posterPath) { this.posterPath = posterPath; }
 }
